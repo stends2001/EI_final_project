@@ -15,21 +15,23 @@ long_delay=1
 supplyRED   = arduino.get_pin('d:10:o')
 supplyBLUE  = arduino.get_pin('d:9:o')
 supplyGREEN = arduino.get_pin('d:8:o')
-ai2 = arduino.get_pin('a:2:i')
+
+ai2 = arduino.get_pin('a:2:i')                                                                              # we now only need 1 pin to measure, as we don't use gain
+
 start = time.time()
 
-number_of_measurements=10
-measurement=0
+number_of_measurements=10                                                                                   # also different to previous code. 10 measurements is more than enough
+measurement=0                                                                                               # start at 0
 
-data0 = np.zeros((number_of_measurements,3))
-data1 = np.zeros((number_of_measurements,1))                                                               # for gain = 10
-ttime = np.zeros((number_of_measurements,4))
+data0 = np.zeros((number_of_measurements,3))                                                                # data per colour when LED is on
+data1 = np.zeros((number_of_measurements,1))                                                                # data when LED is off, then of course we only need 1 array
+ttime = np.zeros((number_of_measurements,4))                                                                # 4 types of measurements, therefore, 4 columns needed for measurement of time                                                               
 
-for measurement in range(number_of_measurements-1):
+for measurement in range(number_of_measurements):
     time.sleep(long_delay)
     time.sleep(small_delay)
     for jj in range(4):
-        if      jj==0:     supply=supplyBLUE                            # Within one round of measurements, the supply switches. This increases speed
+        if      jj==0:     supply=supplyBLUE                                                                # Within one round of measurements, the supply switches. This increases speed
         elif    jj==1:     supply=supplyGREEN
         elif    jj==2:     supply=supplyRED
         if (jj<=2):
@@ -40,7 +42,7 @@ for measurement in range(number_of_measurements-1):
             ttime[measurement,jj]=time.time()-start
             supply.write(0)
             time.sleep(long_delay)
-        if (jj==3):
+        if (jj==3):                                                                                         # only te last within each round of measurements is done without a LED turned on.
             supply.write(0)
             time.sleep(small_delay)
             data1[measurement, 0]=ai2.read()

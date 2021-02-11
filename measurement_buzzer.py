@@ -78,13 +78,13 @@ def measure():
                 supply.write(0)
             np.savez(Database,data_gain1,data_gain10,data_gain100,ttime,start,time.time())
 
-            if (data_gain1[ii,0]>=1 or (time.time()-start) > 40000):
-                for buz in range(4):
-                    supplyBUZZER.write(1)
-                    time.sleep(1)
-                    supplyBUZZER.write(0)
-                    time.sleep(0.1)
-                kill()
+            if (data_gain1[ii,0]>=1 or (time.time()-start) > 40000):                                    # statement is only executed when over a certain value or time
+                for buz in range(4):                                                                    # buzzer goes off 4 times
+                    supplyBUZZER.write(1)                                                               # buzzer turned on
+                    time.sleep(1)                                                                       # buzzer stays on
+                    supplyBUZZER.write(0)                                                               # buzzer turns off
+                    time.sleep(0.1)                                                                     # buzzer stays off shortly
+                kill()                                                                                  # function "kill()" is executed
             ii+=1
 
         if (flag_exiting == True):
